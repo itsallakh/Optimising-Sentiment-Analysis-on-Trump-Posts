@@ -7,10 +7,22 @@ from playwright.async_api import async_playwright
 
 
 OUTPUT_FILE = Path("factbase_truthsocial_texts.csv")
-TARGET_POSTS = 500
-SCROLL_PAUSE_SECONDS = 2.5
-MAX_STAGNANT_ROUNDS = 5
+
+# normal wait between scrolls
+SCROLL_PAUSE_SECONDS = 3.5
+
+# longer wait when a round found nothing new
+STALL_WAIT_SECONDS = 6.0
+
+# let it tolerate more temporary "nothing new" rounds
+MAX_STAGNANT_ROUNDS = 12
+
 START_URL = "https://factba.se/"
+
+# after you manually open the correct archive page and press Enter,
+# the script closes the visible browser and resumes scraping headlessly
+# from that page URL so it can run in the background.
+RUN_HEADLESS_AFTER_SELECTION = True
 
 
 DATE_RE = re.compile(
@@ -105,13 +117,11 @@ def save_rows(rows: list[dict]) -> pd.DataFrame:
                 df[col] = ""
         df = df[["date_et", "truth_social_url", "text", "raw_card_text"]]
 
-        # Deduplicate rows with a URL
         with_url = df[df["truth_social_url"].astype(str).str.strip() != ""].drop_duplicates(
             subset=["truth_social_url"], keep="first"
         )
         no_url = df[df["truth_social_url"].astype(str).str.strip() == ""].copy()
 
-        # Deduplicate no-url rows by raw text prefix
         if not no_url.empty:
             no_url["_fallback_key"] = no_url["raw_card_text"].astype(str).str[:300]
             no_url = no_url.drop_duplicates(subset=["_fallback_key"], keep="first").drop(
@@ -124,7 +134,7 @@ def save_rows(rows: list[dict]) -> pd.DataFrame:
     return df
 
 
-async def get_active_page(context):
+async def get_selected_page(context):
     pages = [p for p in context.pages if not p.is_closed()]
     if not pages:
         return None
@@ -138,12 +148,31 @@ async def open_start_page(page):
     await asyncio.sleep(2)
 
 
-async def debug_page_info(page):
+async def debug_page_info(page, label=""):
     try:
-        print(f"Current page URL: {page.url}")
-        print(f"Current page title: {await page.title()}")
+        prefix = f"{label} " if label else ""
+        print(f"{prefix}Current page URL: {page.url}")
+        print(f"{prefix}Current page title: {await page.title()}")
     except Exception as e:
         print(f"Could not read page info: {e}")
+
+
+async def launch_browser(p, headless: bool):
+    if headless:
+        # Prefer Chromium channel for modern headless mode; fall back if unavailable.
+        try:
+            browser = await p.chromium.launch(channel="chromium", headless=True)
+        except Exception:
+            browser = await p.chromium.launch(headless=True)
+    else:
+        try:
+            browser = await p.chromium.launch(channel="chrome", headless=False, slow_mo=150)
+        except Exception:
+            browser = await p.chromium.launch(headless=False, slow_mo=150)
+
+    context = await browser.new_context(viewport={"width": 1440, "height": 2200})
+    page = await context.new_page()
+    return browser, context, page
 
 
 async def collect_visible_cards(page) -> list[dict]:
@@ -275,43 +304,45 @@ async def main():
     }
 
     async with async_playwright() as p:
-        try:
-            browser = await p.chromium.launch(channel="chrome", headless=False, slow_mo=150)
-        except Exception:
-            browser = await p.chromium.launch(headless=False, slow_mo=150)
-
-        context = await browser.new_context(viewport={"width": 1440, "height": 2200})
-        page = await context.new_page()
-
+        # Step 1: visible browser so you can manually get to the right page
+        browser, context, page = await launch_browser(p, headless=False)
         await open_start_page(page)
 
         print("\nChrome opened Factba.se directly.")
         print("Now manually navigate to the Trump Truth Social archive page.")
-        print("You can use the same tab or open a new tab.")
-        print("Wait until the archive posts are fully visible on screen.\n")
+        print("Use the same window/tab you want the script to continue with.")
+        print("Wait until posts are visible.\n")
         input("Press Enter only after the correct archive page is fully open and loaded... ")
 
-        page = await get_active_page(context)
-        if page is None:
-            print("No active page found.")
+        selected_page = await get_selected_page(context)
+        if selected_page is None:
+            print("No selected page found.")
+            await browser.close()
             return
 
-        await page.bring_to_front()
-        await asyncio.sleep(3)
-        await debug_page_info(page)
+        page = selected_page
+        await asyncio.sleep(2)
+        await debug_page_info(page, label="[VISIBLE]")
+
+        # lock in the URL once you've chosen the correct page
+        selected_url = page.url
+
+        # Optional: switch to headless mode so it runs in the background
+        if RUN_HEADLESS_AFTER_SELECTION:
+            print("\nSwitching to headless background scraping...")
+            await browser.close()
+
+            browser, context, page = await launch_browser(p, headless=True)
+            await page.goto(selected_url, wait_until="domcontentloaded")
+            await asyncio.sleep(4)
+            await debug_page_info(page, label="[HEADLESS]")
 
         stagnant_rounds = 0
 
         while True:
-            if len(seen_urls) + len(seen_fallback_keys) >= TARGET_POSTS:
+            if page.is_closed():
+                print("Page was closed. Stopping.")
                 break
-
-            page = await get_active_page(context)
-            if page is None:
-                print("No active page found.")
-                break
-
-            await page.bring_to_front()
 
             visible_cards = await collect_visible_cards(page)
             before_total = len(seen_urls) + len(seen_fallback_keys)
@@ -348,15 +379,13 @@ async def main():
                 else:
                     seen_fallback_keys.add(fallback_key)
 
-                if len(seen_urls) + len(seen_fallback_keys) >= TARGET_POSTS:
-                    break
-
             df = save_rows(rows)
 
             print(
                 f"Visible cards parsed: {len(visible_cards)} | "
                 f"new rows added this round: {new_rows} | "
-                f"total saved so far: {len(df)}"
+                f"total saved so far: {len(df)} | "
+                f"stagnant rounds: {stagnant_rounds}"
             )
 
             if len(visible_cards) == 0:
@@ -370,20 +399,60 @@ async def main():
 
             after_total = len(seen_urls) + len(seen_fallback_keys)
 
-            if after_total >= TARGET_POSTS:
-                break
-
             if after_total == before_total and new_rows == 0:
                 stagnant_rounds += 1
+                await page.mouse.wheel(0, 12000)
+                await asyncio.sleep(STALL_WAIT_SECONDS)
+
+                # one more quick check after extra waiting before giving up
+                retry_cards = await collect_visible_cards(page)
+                retry_new = 0
+
+                for item in retry_cards:
+                    url = (item.get("truth_social_url") or "").strip()
+                    raw = (item.get("raw_card_text") or "").strip()
+
+                    if not raw:
+                        continue
+
+                    fallback_key = raw[:300]
+
+                    if url:
+                        if url in seen_urls:
+                            continue
+                    else:
+                        if fallback_key in seen_fallback_keys:
+                            continue
+
+                    row = {
+                        "date_et": extract_date_et(raw),
+                        "truth_social_url": url,
+                        "text": clean_post_text(raw),
+                        "raw_card_text": raw,
+                    }
+
+                    rows.append(row)
+                    retry_new += 1
+
+                    if url:
+                        seen_urls.add(url)
+                    else:
+                        seen_fallback_keys.add(fallback_key)
+
+                if retry_new > 0:
+                    df = save_rows(rows)
+                    stagnant_rounds = 0
+                    print(
+                        f"Retry after stall found {retry_new} more rows | "
+                        f"total saved so far: {len(df)}"
+                    )
+                elif stagnant_rounds >= MAX_STAGNANT_ROUNDS:
+                    print("No new posts found after many retries. Stopping.")
+                    break
             else:
                 stagnant_rounds = 0
-
-            if stagnant_rounds >= MAX_STAGNANT_ROUNDS:
-                print("No new posts found after several scrolls. Stopping.")
-                break
-
-            await page.mouse.wheel(0, 9000)
-            await asyncio.sleep(SCROLL_PAUSE_SECONDS)
+                await page.mouse.wheel(0, 12000)
+                await asyncio.sleep(SCROLL_PAUSE_SECONDS)
 
         await browser.close()
 
