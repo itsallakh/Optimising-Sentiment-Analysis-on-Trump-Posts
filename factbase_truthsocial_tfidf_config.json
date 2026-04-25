@@ -1,0 +1,15 @@
+{
+  "input_file": "factbase_truthsocial_texts_clean.csv",
+  "text_column": "text_clean",
+  "min_df": 2,
+  "max_df": 0.98,
+  "max_features": 5000,
+  "drop_duplicate_text": false,
+  "n_documents": 7437,
+  "n_features": 5000,
+  "recommended_model": "LogisticRegression(penalty='l2')",
+  "target_labels": [
+    "negative",
+    "positive"
+  ]
+}

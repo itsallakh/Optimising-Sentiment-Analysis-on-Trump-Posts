@@ -1,0 +1,84 @@
+{
+  "input_file": "factbase_truthsocial_texts_sentiment_labeled.csv",
+  "text_column": "text_for_nlp",
+  "label_column": "sentiment_label",
+  "train_rows": 5949,
+  "test_rows": 1488,
+  "test_size": 0.2,
+  "random_state": 42,
+  "vectorizer": {
+    "min_df": 2,
+    "max_df": 0.98,
+    "max_features": 5000,
+    "ngram_range": [
+      1,
+      2
+    ]
+  },
+  "classifier": {
+    "model": "LogisticRegression",
+    "penalty": "l2",
+    "solver": "lbfgs",
+    "C": 1.0
+  },
+  "metrics": {
+    "accuracy": 0.8844086021505376,
+    "macro_f1": 0.767120894479385,
+    "weighted_f1": 0.8715247251715096
+  },
+  "classification_report": {
+    "negative": {
+      "precision": 0.8227848101265823,
+      "recall": 0.4744525547445255,
+      "f1-score": 0.6018518518518517,
+      "support": 274
+    },
+    "positive": {
+      "precision": 0.8917293233082707,
+      "recall": 0.9769357495881383,
+      "f1-score": 0.9323899371069183,
+      "support": 1214
+    },
+    "accuracy": 0.8844086021505376,
+    "macro avg": {
+      "precision": 0.8572570667174265,
+      "recall": 0.7256941521663319,
+      "f1-score": 0.767120894479385,
+      "support": 1488
+    },
+    "weighted avg": {
+      "precision": 0.8790338954777717,
+      "recall": 0.8844086021505376,
+      "f1-score": 0.8715247251715096,
+      "support": 1488
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "negative",
+      "positive"
+    ],
+    "matrix": [
+      [
+        130,
+        144
+      ],
+      [
+        28,
+        1186
+      ]
+    ]
+  },
+  "label_distribution_full": {
+    "positive": 6070,
+    "negative": 1367
+  },
+  "label_distribution_train": {
+    "positive": 4856,
+    "negative": 1093
+  },
+  "label_distribution_test": {
+    "positive": 1214,
+    "negative": 274
+  }
+}
