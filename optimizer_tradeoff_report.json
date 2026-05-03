@@ -1,0 +1,22 @@
+{
+  "input_file": "factbase_truthsocial_texts_sentiment_labeled.csv",
+  "text_column": "text_for_nlp",
+  "label_column": "sentiment_label",
+  "train_rows": 5949,
+  "test_rows": 1488,
+  "feature_count": 5000,
+  "epochs_per_run": 80,
+  "convergence_tol": 0.0001,
+  "convergence_patience": 5,
+  "scenarios": [
+    "l2_interaction",
+    "learning_rate_sensitivity",
+    "mini_batch_size",
+    "stability_across_seeds"
+  ],
+  "output_files": {
+    "results": "optimizer_tradeoff_results.csv",
+    "loss_history": "optimizer_tradeoff_loss_history.csv",
+    "stability_summary": "optimizer_stability_summary.csv"
+  }
+}
