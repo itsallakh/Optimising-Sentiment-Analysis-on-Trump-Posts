@@ -1,0 +1,195 @@
+{
+  "input_file": "factbase_truthsocial_texts_sentiment_labeled.csv",
+  "text_column": "text_for_nlp",
+  "label_column": "sentiment_label",
+  "train_rows": 5949,
+  "test_rows": 1488,
+  "feature_count": 5000,
+  "test_size": 0.2,
+  "random_state": 42,
+  "vectorizer": {
+    "min_df": 2,
+    "max_df": 0.98,
+    "max_features": 5000,
+    "ngram_range": [
+      1,
+      2
+    ]
+  },
+  "objective": {
+    "model": "binary logistic regression",
+    "regularization": "L2",
+    "l2": 0.0001
+  },
+  "results": [
+    {
+      "optimizer": "Batch GD",
+      "epochs": 300,
+      "learning_rate": 8.0,
+      "batch_size": null,
+      "l2": 0.0001,
+      "final_training_loss": 0.28136669478973353,
+      "runtime_seconds": 0.35011140001006424,
+      "test_accuracy": 0.8655913978494624,
+      "test_macro_f1": 0.7087150575522668,
+      "test_weighted_f1": 0.8437551307018675
+    },
+    {
+      "optimizer": "SGD",
+      "epochs": 300,
+      "learning_rate": 0.05,
+      "batch_size": null,
+      "l2": 0.0001,
+      "final_training_loss": 0.24610943544570102,
+      "runtime_seconds": 43.07263680000324,
+      "test_accuracy": 0.8924731182795699,
+      "test_macro_f1": 0.7928153717627402,
+      "test_weighted_f1": 0.8835889005668293
+    },
+    {
+      "optimizer": "Mini-batch GD",
+      "epochs": 300,
+      "learning_rate": 1.0,
+      "batch_size": 64,
+      "l2": 0.0001,
+      "final_training_loss": 0.24605914681530133,
+      "runtime_seconds": 2.6060864999890327,
+      "test_accuracy": 0.8924731182795699,
+      "test_macro_f1": 0.7928153717627402,
+      "test_weighted_f1": 0.8835889005668293
+    }
+  ],
+  "classification_reports": {
+    "Batch GD": {
+      "negative": {
+        "precision": 0.8032786885245902,
+        "recall": 0.35766423357664234,
+        "f1-score": 0.494949494949495,
+        "support": 274.0
+      },
+      "positive": {
+        "precision": 0.8711566617862372,
+        "recall": 0.9802306425041186,
+        "f1-score": 0.9224806201550387,
+        "support": 1214.0
+      },
+      "accuracy": 0.8655913978494624,
+      "macro avg": {
+        "precision": 0.8372176751554137,
+        "recall": 0.6689474380403805,
+        "f1-score": 0.7087150575522668,
+        "support": 1488.0
+      },
+      "weighted avg": {
+        "precision": 0.8586576263872511,
+        "recall": 0.8655913978494624,
+        "f1-score": 0.8437551307018675,
+        "support": 1488.0
+      }
+    },
+    "Mini-batch GD": {
+      "negative": {
+        "precision": 0.8131868131868132,
+        "recall": 0.5401459854014599,
+        "f1-score": 0.6491228070175439,
+        "support": 274.0
+      },
+      "positive": {
+        "precision": 0.9035222052067381,
+        "recall": 0.9719934102141681,
+        "f1-score": 0.9365079365079365,
+        "support": 1214.0
+      },
+      "accuracy": 0.8924731182795699,
+      "macro avg": {
+        "precision": 0.8583545091967757,
+        "recall": 0.756069697807814,
+        "f1-score": 0.7928153717627402,
+        "support": 1488.0
+      },
+      "weighted avg": {
+        "precision": 0.8868878655471552,
+        "recall": 0.8924731182795699,
+        "f1-score": 0.8835889005668293,
+        "support": 1488.0
+      }
+    },
+    "SGD": {
+      "negative": {
+        "precision": 0.8131868131868132,
+        "recall": 0.5401459854014599,
+        "f1-score": 0.6491228070175439,
+        "support": 274.0
+      },
+      "positive": {
+        "precision": 0.9035222052067381,
+        "recall": 0.9719934102141681,
+        "f1-score": 0.9365079365079365,
+        "support": 1214.0
+      },
+      "accuracy": 0.8924731182795699,
+      "macro avg": {
+        "precision": 0.8583545091967757,
+        "recall": 0.756069697807814,
+        "f1-score": 0.7928153717627402,
+        "support": 1488.0
+      },
+      "weighted avg": {
+        "precision": 0.8868878655471552,
+        "recall": 0.8924731182795699,
+        "f1-score": 0.8835889005668293,
+        "support": 1488.0
+      }
+    }
+  },
+  "confusion_matrices": {
+    "Batch GD": {
+      "labels": [
+        "negative",
+        "positive"
+      ],
+      "matrix": [
+        [
+          98,
+          176
+        ],
+        [
+          24,
+          1190
+        ]
+      ]
+    },
+    "Mini-batch GD": {
+      "labels": [
+        "negative",
+        "positive"
+      ],
+      "matrix": [
+        [
+          148,
+          126
+        ],
+        [
+          34,
+          1180
+        ]
+      ]
+    },
+    "SGD": {
+      "labels": [
+        "negative",
+        "positive"
+      ],
+      "matrix": [
+        [
+          148,
+          126
+        ],
+        [
+          34,
+          1180
+        ]
+      ]
+    }
+  }
+}
