@@ -1,0 +1,100 @@
+{
+  "source_files": {
+    "results": "optimizer_tradeoff_results.csv",
+    "loss_history": "optimizer_tradeoff_loss_history.csv",
+    "stability": "optimizer_stability_summary.csv",
+    "report": "optimizer_tradeoff_report.json"
+  },
+  "inferred_columns": {
+    "results": [
+      "scenario",
+      "optimizer",
+      "learning_rate",
+      "batch_size",
+      "l2",
+      "seed",
+      "epochs",
+      "final_training_loss",
+      "initial_training_loss",
+      "loss_reduction",
+      "loss_roughness",
+      "convergence_epoch",
+      "best_loss_epoch",
+      "epoch_to_90pct_loss_reduction",
+      "runtime_seconds",
+      "test_accuracy",
+      "test_macro_f1",
+      "test_weighted_f1",
+      "positive_prediction_rate",
+      "performance_score",
+      "runtime_score",
+      "smoothness_score",
+      "practical_score"
+    ],
+    "loss_history": [
+      "scenario",
+      "optimizer",
+      "learning_rate",
+      "batch_size",
+      "l2",
+      "seed",
+      "epochs",
+      "epoch",
+      "training_loss"
+    ],
+    "stability": [
+      "scenario",
+      "optimizer",
+      "learning_rate",
+      "batch_size",
+      "l2",
+      "runs",
+      "mean_final_loss",
+      "std_final_loss",
+      "mean_runtime_seconds",
+      "std_runtime_seconds",
+      "mean_accuracy",
+      "std_accuracy",
+      "mean_macro_f1",
+      "std_macro_f1",
+      "mean_weighted_f1",
+      "std_weighted_f1"
+    ]
+  },
+  "experiment_report": {
+    "input_file": "factbase_truthsocial_texts_sentiment_labeled.csv",
+    "text_column": "text_for_nlp",
+    "label_column": "sentiment_label",
+    "train_rows": 5949,
+    "test_rows": 1488,
+    "feature_count": 5000,
+    "epochs_per_run": 80,
+    "convergence_tol": 0.0001,
+    "convergence_patience": 5,
+    "scenarios": [
+      "l2_interaction",
+      "learning_rate_sensitivity",
+      "mini_batch_size",
+      "stability_across_seeds"
+    ],
+    "output_files": {
+      "results": "optimizer_tradeoff_results.csv",
+      "loss_history": "optimizer_tradeoff_loss_history.csv",
+      "stability_summary": "optimizer_stability_summary.csv"
+    }
+  },
+  "generated_files": [
+    "optimizer_analysis_outputs/overall_optimizer_summary.csv",
+    "optimizer_analysis_outputs/overall_optimizer_summary.md",
+    "optimizer_analysis_outputs/scenario_best_results.csv",
+    "optimizer_analysis_outputs/scenario_best_results.md",
+    "optimizer_analysis_outputs/loss_curves_by_optimizer.png",
+    "optimizer_analysis_outputs/runtime_vs_macro_f1.png",
+    "optimizer_analysis_outputs/learning_rate_sensitivity.png",
+    "optimizer_analysis_outputs/mini_batch_size_tradeoff.png",
+    "optimizer_analysis_outputs/stability_across_seeds.png",
+    "optimizer_analysis_outputs/l2_interaction_plot.png",
+    "optimizer_analysis_outputs/optimizer_loss_animation.gif",
+    "optimizer_analysis_outputs/optimizer_interpretation.md"
+  ]
+}

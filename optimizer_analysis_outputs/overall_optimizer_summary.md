@@ -1,0 +1,7 @@
+# Overall Optimizer Summary
+
+| optimizer     |   runs |   mean_macro_f1 |   best_macro_f1 | best_macro_f1_config                             |   mean_runtime_seconds |   fastest_runtime_seconds |   mean_loss_roughness |   mean_epoch_to_90pct_loss_reduction |   best_practical_score | best_practical_config                             |
+|:--------------|-------:|----------------:|----------------:|:-------------------------------------------------|-----------------------:|--------------------------:|----------------------:|-------------------------------------:|-----------------------:|:--------------------------------------------------|
+| Mini-batch GD |     18 |        0.74106  |        0.822679 | Mini-batch GD, lr=1, batch=8, L2=0.0001, seed=42 |               1.106    |                  0.384806 |              0.003288 |                              33.8333 |               0.926951 | Mini-batch GD, lr=2, batch=64, L2=0.0001, seed=42 |
+| SGD           |     13 |        0.752646 |        0.841015 | SGD, lr=0.05, L2=1e-05, seed=42                  |              12.725    |                 10.3838   |              0.004144 |                              22.4167 |               0.79826  | SGD, lr=0.1, L2=0.0001, seed=42                   |
+| Batch GD      |      8 |        0.476661 |        0.554017 | Batch GD, lr=12, L2=0.0001, seed=42              |               0.091883 |                  0.070871 |              0.011314 |                              40.5    |               0.415548 | Batch GD, lr=8, L2=1e-05, seed=42                 |
