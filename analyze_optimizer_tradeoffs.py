@@ -285,10 +285,10 @@ def plot_loss_curves(results: pd.DataFrame, loss: pd.DataFrame, path: Path) -> N
 
 
 def plot_runtime_vs_macro_f1(results: pd.DataFrame, path: Path) -> None:
-    plt.figure(figsize=(8.5, 5.5))
+    fig, ax = plt.subplots(figsize=(9.5, 6.0))
     markers = {"Batch GD": "o", "SGD": "s", "Mini-batch GD": "^"}
     for optimizer, group in results.groupby("optimizer"):
-        plt.scatter(
+        ax.scatter(
             group["runtime_seconds"],
             group["test_macro_f1"],
             s=75,
@@ -296,19 +296,29 @@ def plot_runtime_vs_macro_f1(results: pd.DataFrame, path: Path) -> None:
             marker=markers.get(optimizer, "o"),
             label=optimizer,
         )
-    for _, row in results.nlargest(3, "practical_score").iterrows():
-        plt.annotate(
+    label_offsets = {
+        "Batch GD": (12, -18),
+        "Mini-batch GD": (18, 14),
+        "SGD": (-54, 14),
+    }
+    for optimizer, group in results.groupby("optimizer"):
+        row = group.loc[group["practical_score"].idxmax()]
+        ax.annotate(
             row["optimizer"],
             (row["runtime_seconds"], row["test_macro_f1"]),
-            xytext=(5, 5),
+            xytext=label_offsets.get(row["optimizer"], (10, 10)),
             textcoords="offset points",
-            fontsize=8,
+            fontsize=8.5,
+            ha="right" if row["optimizer"] == "SGD" else "left",
+            bbox={"boxstyle": "round,pad=0.2", "fc": "white", "ec": "none", "alpha": 0.78},
+            arrowprops={"arrowstyle": "-", "color": "0.45", "lw": 0.8, "shrinkA": 2, "shrinkB": 4},
         )
-    plt.title("Runtime vs. Final Macro F1")
-    plt.xlabel("Runtime (seconds)")
-    plt.ylabel("Test macro F1")
-    plt.grid(alpha=0.25)
-    plt.legend()
+    ax.set_title("Runtime vs. Final Macro F1")
+    ax.set_xlabel("Runtime (seconds)")
+    ax.set_ylabel("Test macro F1")
+    ax.margins(x=0.08, y=0.12)
+    ax.grid(alpha=0.25)
+    ax.legend(loc="lower right")
     save_figure(path)
 
 

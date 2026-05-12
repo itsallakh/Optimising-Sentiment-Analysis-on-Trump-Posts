@@ -387,16 +387,55 @@ def save_seed_stability_boxplot(results: pd.DataFrame, output: Path) -> bool:
         return False
 
     optimizers = sorted(stability["optimizer"].unique())
-    values = [
-        stability.loc[stability["optimizer"] == optimizer, "validation_macro_f1"].to_numpy()
-        for optimizer in optimizers
-    ]
+    colors = {"Mini-batch GD": "#ff7f0e", "SGD": "#2ca02c"}
     fig, ax = plt.subplots(figsize=(7.5, 5))
-    ax.boxplot(values, labels=optimizers, showmeans=True)
+    for x_pos, optimizer in enumerate(optimizers, start=1):
+        group = stability.loc[stability["optimizer"] == optimizer].sort_values("seed")
+        values = group["validation_macro_f1"].to_numpy()
+        seeds = group["seed"].to_numpy()
+        jitter = np.linspace(-0.08, 0.08, len(values)) if len(values) > 1 else np.array([0.0])
+        ax.scatter(
+            np.full(len(values), x_pos) + jitter,
+            values,
+            s=55,
+            color=colors.get(optimizer, "#1f77b4"),
+            alpha=0.75,
+            edgecolor="black",
+            linewidth=0.5,
+            zorder=3,
+        )
+        for point_x, point_y, seed in zip(np.full(len(values), x_pos) + jitter, values, seeds):
+            ax.annotate(
+                int(seed),
+                (point_x, point_y),
+                xytext=(0, 7),
+                textcoords="offset points",
+                ha="center",
+                fontsize=7,
+                alpha=0.8,
+            )
+        mean = float(np.mean(values))
+        std = float(np.std(values, ddof=1)) if len(values) > 1 else 0.0
+        ci = 1.96 * std / np.sqrt(len(values)) if len(values) > 1 else 0.0
+        ax.errorbar(
+            x_pos,
+            mean,
+            yerr=ci,
+            fmt="D",
+            color="black",
+            ecolor="black",
+            elinewidth=1.8,
+            capsize=7,
+            markersize=7,
+            zorder=4,
+            label="Mean +/- 95% CI" if x_pos == 1 else None,
+        )
+    ax.set_xticks(np.arange(1, len(optimizers) + 1), optimizers)
     ax.set_title("Seed Stability: Validation Macro F1 by Optimizer")
     ax.set_xlabel("Optimizer")
     ax.set_ylabel("Validation macro F1")
     ax.grid(axis="y", alpha=0.25)
+    ax.legend(loc="best")
     fig.tight_layout()
     fig.savefig(output, dpi=300, bbox_inches="tight")
     plt.close(fig)
@@ -742,7 +781,7 @@ def main() -> None:
             "loss_history": str(args.loss_output),
             "stability_summary": str(args.stability_output),
             "seed_stability_summary": str(args.seed_stability_output),
-            "seed_stability_boxplot": str(args.seed_stability_plot_output)
+            "seed_stability_plot": str(args.seed_stability_plot_output)
             if seed_stability_plot_saved
             else None,
             "selected_configs": str(args.selected_configs_output),
@@ -756,9 +795,9 @@ def main() -> None:
     print(f"Saved validation stability summary to: {args.stability_output}")
     print(f"Saved seed stability summary to: {args.seed_stability_output}")
     if seed_stability_plot_saved:
-        print(f"Saved seed stability boxplot to: {args.seed_stability_plot_output}")
+        print(f"Saved seed stability plot to: {args.seed_stability_plot_output}")
     else:
-        print("Skipped seed stability boxplot because no seed-stability data or matplotlib was unavailable.")
+        print("Skipped seed stability plot because no seed-stability data or matplotlib was unavailable.")
     print(f"Saved selected optimizer configs to: {args.selected_configs_output}")
     print(f"Saved final test optimizer results to: {args.final_test_results_output}")
     print(f"Saved validation optimizer report to: {args.report_output}")

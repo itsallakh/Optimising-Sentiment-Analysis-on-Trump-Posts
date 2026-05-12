@@ -92,12 +92,14 @@ $$
 The optimization objective is binary cross-entropy with L2 regularization:
 
 $$
+\begin{aligned}
 J(w,b) =
--\frac{1}{n}\sum_{i=1}^{n}
+&-\frac{1}{n}\sum_{i=1}^{n}
 \left[
 y_i \log(p_i) + (1-y_i)\log(1-p_i)
-\right]
-+ \frac{\lambda}{2}\lVert w\rVert_2^2
+\right] \\
+&+ \frac{\lambda}{2}\lVert w\rVert_2^2
+\end{aligned}
 $$
 
 The corresponding full-training-set gradients are:
@@ -324,7 +326,7 @@ The sklearn model provides a useful sanity check: it trains quickly and lands in
 
 ### Seed Stability
 
-The seed-stability scenario reruns SGD and Mini-batch GD across seeds 1, 7, 42, 99, and 123. The summary is saved to `optimizer_seed_stability_summary.csv`, and a macro-F1 boxplot is saved to `results/figures/seed_stability_boxplot.png`.
+The seed-stability scenario reruns SGD and Mini-batch GD across seeds 1, 7, 42, 99, and 123. The summary is saved to `optimizer_seed_stability_summary.csv`, and a compact dot plot with individual seeds plus mean and 95% confidence interval is saved to `results/figures/seed_stability_boxplot.png`.
 
 | Optimizer | Seeds | Mean accuracy | Mean macro F1 | 95% CI macro F1 | Mean weighted F1 | Mean runtime (s) | Mean final loss |
 | --- | ---: | ---: | ---: | --- | ---: | ---: | ---: |
