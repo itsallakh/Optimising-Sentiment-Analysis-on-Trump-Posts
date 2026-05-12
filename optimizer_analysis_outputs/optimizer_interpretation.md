@@ -2,6 +2,85 @@
 
 This analysis keeps the modeling setup fixed: same dataset, same TF-IDF features, same binary logistic regression model, same L2 baseline, and same train/test split. The only moving parts are optimizer-related settings.
 
+## Mathematical Optimization Problem
+
+The experiments train binary logistic regression with L2 regularization on TF-IDF features. Let:
+
+- $X \in \mathbb{R}^{n \times d}$ be the TF-IDF feature matrix, with row $x_i$ representing one post.
+- $y \in \{0,1\}^n$ be the binary labels, where 1 is positive sentiment and 0 is negative sentiment.
+- $w \in \mathbb{R}^d$ be the model parameter vector.
+- $b \in \mathbb{R}$ be the bias term.
+- $\lambda \ge 0$ be the L2 regularization strength.
+
+The prediction for example $i$ is:
+
+$$
+p_i = \sigma(w^T x_i + b) = \frac{1}{1 + e^{-(w^T x_i + b)}}
+$$
+
+The objective minimized by the optimizers is binary cross-entropy with L2 regularization:
+
+$$
+J(w,b) =
+-\frac{1}{n}\sum_{i=1}^{n}
+\left[
+y_i \log(p_i) + (1-y_i)\log(1-p_i)
+\right]
++ \frac{\lambda}{2}\lVert w\rVert_2^2
+$$
+
+The full-training-set gradients are:
+
+$$
+\nabla_w J =
+\frac{1}{n}X^T(p-y) + \lambda w
+$$
+
+$$
+\nabla_b J =
+\frac{1}{n}\sum_{i=1}^{n}(p_i-y_i)
+$$
+
+Batch Gradient Descent uses these gradients over the full training set:
+
+$$
+w \leftarrow w - \eta \nabla_w J,
+\quad
+b \leftarrow b - \eta \nabla_b J
+$$
+
+Stochastic Gradient Descent updates after each single example $(x_i,y_i)$:
+
+$$
+\nabla_w J_i = (p_i-y_i)x_i + \lambda w,
+\quad
+\nabla_b J_i = p_i-y_i
+$$
+
+$$
+w \leftarrow w - \eta \nabla_w J_i,
+\quad
+b \leftarrow b - \eta \nabla_b J_i
+$$
+
+Mini-batch Gradient Descent updates using a mini-batch $B$:
+
+$$
+\nabla_w J_B =
+\frac{1}{|B|}\sum_{i \in B}(p_i-y_i)x_i + \lambda w,
+\quad
+\nabla_b J_B =
+\frac{1}{|B|}\sum_{i \in B}(p_i-y_i)
+$$
+
+$$
+w \leftarrow w - \eta \nabla_w J_B,
+\quad
+b \leftarrow b - \eta \nabla_b J_B
+$$
+
+The three methods differ mainly in how often they update parameters and how much data each update uses. Batch GD updates least often and has the smoothest gradient estimate. SGD updates most often and is useful for sparse TF-IDF examples, but its convergence path is noisier and more seed-sensitive. Mini-batch GD uses sparse TF-IDF efficiently while averaging over enough examples to reduce noise, which explains why it is a strong practical compromise in the saved results.
+
 ## Main Takeaways
 
 - Fastest convergence by the saved 90% loss-reduction marker: Mini-batch GD (lr=1, batch=64, L2=0.01), reaching that point at epoch 2.
