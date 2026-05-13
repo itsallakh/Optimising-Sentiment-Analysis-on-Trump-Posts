@@ -355,6 +355,18 @@ An animated loss visualization is also saved as `outputs/optimizers/analysis/opt
 
 The project is organized so scraping is optional. The raw scraped CSV can be saved once and reused for preprocessing, labeling, training, and analysis.
 
+Install the required Python packages inside the project environment first:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+If running the scraper, also install the Playwright browser once:
+
+```bash
+python -m playwright install chromium
+```
+
 To run everything from the scraper:
 
 ```bash

@@ -7,9 +7,9 @@ This analysis keeps the modeling setup fixed: same dataset, same TF-IDF features
 - Fastest convergence by the saved 90% loss-reduction marker: Mini-batch GD (lr=1, batch=64, L2=0.01), reaching that point at epoch 2.
 - Smoothest loss trajectory: Batch GD (lr=4, L2=0.0001), with loss roughness 0.000976.
 - Most fluctuating loss trajectory: Batch GD (lr=12, L2=0.0001), with loss roughness 0.031305.
-- Best final test macro F1: SGD (lr=0.05, L2=1e-05), macro F1 0.8149, runtime 15.728 seconds.
-- Fastest run: Batch GD (lr=8, L2=0.0001), runtime 0.077 seconds, macro F1 0.5041.
-- Practical runtime/performance winner: Mini-batch GD (lr=2, batch=64, L2=0.0001), macro F1 0.7557, runtime 0.717 seconds.
+- Best final test macro F1: SGD (lr=0.05, L2=1e-05), macro F1 0.8149, runtime 12.226 seconds.
+- Fastest run: sklearn LogisticRegression (lr=nan, L2=0.0001), runtime 0.033 seconds, macro F1 0.7318.
+- Practical runtime/performance winner: Mini-batch GD (lr=2, batch=64, L2=0.0001), macro F1 0.7557, runtime 0.620 seconds.
 
 ## Convergence, Noise, and Speed
 
@@ -19,7 +19,7 @@ Runtime tells a different part of the story than final macro F1. Batch GD has lo
 
 ## Why Mini-batch GD Is a Strong Practical Choice
 
-SGD can achieve the top final macro F1 in the saved results: 0.8149 at 15.728 seconds. Mini-batch GD's strongest practical run reaches macro F1 0.7557 at 0.717 seconds.
+SGD can achieve the top final macro F1 in the saved results: 0.8149 at 12.226 seconds. Mini-batch GD's strongest practical run reaches macro F1 0.7557 at 0.620 seconds.
 That makes Mini-batch GD easy to defend for a final report: the goal is not only the single highest endpoint, but the balance among final classification performance, convergence behavior, runtime, and stability. A mini-batch update uses more signal per step than SGD while avoiding the fully deterministic, sometimes slower-to-improve behavior of Batch GD.
 
 ## Learning Rate Sensitivity
@@ -29,12 +29,12 @@ The saved curves show that learning rate changes both the endpoint and the shape
 
 ## Mini-batch Size Tradeoff
 
-Within the mini-batch-size scenario, the best macro F1 is batch size 8, with macro F1 0.7770. The fastest mini-batch run is batch size 128, with runtime 0.434 seconds.
+Within the mini-batch-size scenario, the best macro F1 is batch size 8, with macro F1 0.7770. The fastest mini-batch run is batch size 128, with runtime 0.364 seconds.
 The batch-size results show the practical compromise directly: smaller batches make more frequent noisy updates, while larger batches use more examples per update and can be smoother, but may not give the best runtime/performance point.
 
 ## Seed Stability
 
-Across seeds, SGD has the higher mean macro F1 (0.7659 +/- 0.0180). Mini-batch GD has the lower macro-F1 standard deviation (0.0046), and Mini-batch GD is faster on average (0.727 seconds).
+Across seeds, SGD has the higher mean macro F1 (0.7659 +/- 0.0180). Mini-batch GD has the lower macro-F1 standard deviation (0.0046), and Mini-batch GD is faster on average (0.750 seconds).
 The seed-stability result means the optimizer choice affects reproducibility, not just average performance. A small standard deviation suggests that the optimizer is less dependent on random initialization or data order for this fixed model and feature setup.
 
 ## L2 Interaction

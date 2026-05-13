@@ -1,5 +1,5 @@
 {
-  "input_file": "factbase_truthsocial_texts_sentiment_labeled.csv",
+  "input_file": "data/processed/factbase_truthsocial_texts_sentiment_labeled.csv",
   "text_column": "text_for_nlp",
   "label_column": "sentiment_label",
   "train_rows": 5949,
@@ -28,11 +28,11 @@
       "learning_rate": 8.0,
       "batch_size": null,
       "l2": 0.0001,
-      "final_training_loss": 0.28136669478973353,
-      "runtime_seconds": 0.35011140001006424,
-      "test_accuracy": 0.8655913978494624,
-      "test_macro_f1": 0.7087150575522668,
-      "test_weighted_f1": 0.8437551307018675
+      "final_training_loss": 0.2816340138048275,
+      "runtime_seconds": 0.49948145799862687,
+      "test_accuracy": 0.8669354838709677,
+      "test_macro_f1": 0.7103885942113892,
+      "test_weighted_f1": 0.8448987187817766
     },
     {
       "optimizer": "SGD",
@@ -40,11 +40,11 @@
       "learning_rate": 0.05,
       "batch_size": null,
       "l2": 0.0001,
-      "final_training_loss": 0.24610943544570102,
-      "runtime_seconds": 43.07263680000324,
-      "test_accuracy": 0.8924731182795699,
-      "test_macro_f1": 0.7928153717627402,
-      "test_weighted_f1": 0.8835889005668293
+      "final_training_loss": 0.24653351963085413,
+      "runtime_seconds": 62.25142912501178,
+      "test_accuracy": 0.8911290322580645,
+      "test_macro_f1": 0.7894685359147868,
+      "test_weighted_f1": 0.8818871689541302
     },
     {
       "optimizer": "Mini-batch GD",
@@ -52,92 +52,92 @@
       "learning_rate": 1.0,
       "batch_size": 64,
       "l2": 0.0001,
-      "final_training_loss": 0.24605914681530133,
-      "runtime_seconds": 2.6060864999890327,
-      "test_accuracy": 0.8924731182795699,
-      "test_macro_f1": 0.7928153717627402,
-      "test_weighted_f1": 0.8835889005668293
+      "final_training_loss": 0.24646807591745284,
+      "runtime_seconds": 3.2788254159968346,
+      "test_accuracy": 0.8911290322580645,
+      "test_macro_f1": 0.7902255639097744,
+      "test_weighted_f1": 0.8821337618239146
     }
   ],
   "classification_reports": {
     "Batch GD": {
       "negative": {
-        "precision": 0.8032786885245902,
+        "precision": 0.8166666666666667,
         "recall": 0.35766423357664234,
-        "f1-score": 0.494949494949495,
+        "f1-score": 0.49746192893401014,
         "support": 274.0
       },
       "positive": {
-        "precision": 0.8711566617862372,
-        "recall": 0.9802306425041186,
-        "f1-score": 0.9224806201550387,
+        "precision": 0.8713450292397661,
+        "recall": 0.9818780889621087,
+        "f1-score": 0.9233152594887684,
         "support": 1214.0
       },
-      "accuracy": 0.8655913978494624,
+      "accuracy": 0.8669354838709677,
       "macro avg": {
-        "precision": 0.8372176751554137,
-        "recall": 0.6689474380403805,
-        "f1-score": 0.7087150575522668,
+        "precision": 0.8440058479532164,
+        "recall": 0.6697711612693755,
+        "f1-score": 0.7103885942113892,
         "support": 1488.0
       },
       "weighted avg": {
-        "precision": 0.8586576263872511,
-        "recall": 0.8655913978494624,
-        "f1-score": 0.8437551307018675,
+        "precision": 0.8612765673143432,
+        "recall": 0.8669354838709677,
+        "f1-score": 0.8448987187817766,
         "support": 1488.0
       }
     },
     "Mini-batch GD": {
       "negative": {
-        "precision": 0.8131868131868132,
-        "recall": 0.5401459854014599,
-        "f1-score": 0.6491228070175439,
+        "precision": 0.8076923076923077,
+        "recall": 0.5364963503649635,
+        "f1-score": 0.6447368421052632,
         "support": 274.0
       },
       "positive": {
-        "precision": 0.9035222052067381,
-        "recall": 0.9719934102141681,
-        "f1-score": 0.9365079365079365,
+        "precision": 0.9027565084226646,
+        "recall": 0.971169686985173,
+        "f1-score": 0.9357142857142857,
         "support": 1214.0
       },
-      "accuracy": 0.8924731182795699,
+      "accuracy": 0.8911290322580645,
       "macro avg": {
-        "precision": 0.8583545091967757,
-        "recall": 0.756069697807814,
-        "f1-score": 0.7928153717627402,
+        "precision": 0.8552244080574862,
+        "recall": 0.7538330186750682,
+        "f1-score": 0.7902255639097744,
         "support": 1488.0
       },
       "weighted avg": {
-        "precision": 0.8868878655471552,
-        "recall": 0.8924731182795699,
-        "f1-score": 0.8835889005668293,
+        "precision": 0.8852514069440909,
+        "recall": 0.8911290322580645,
+        "f1-score": 0.8821337618239146,
         "support": 1488.0
       }
     },
     "SGD": {
       "negative": {
-        "precision": 0.8131868131868132,
-        "recall": 0.5401459854014599,
-        "f1-score": 0.6491228070175439,
+        "precision": 0.8111111111111111,
+        "recall": 0.5328467153284672,
+        "f1-score": 0.6431718061674009,
         "support": 274.0
       },
       "positive": {
-        "precision": 0.9035222052067381,
+        "precision": 0.9021406727828746,
         "recall": 0.9719934102141681,
-        "f1-score": 0.9365079365079365,
+        "f1-score": 0.9357652656621729,
         "support": 1214.0
       },
-      "accuracy": 0.8924731182795699,
+      "accuracy": 0.8911290322580645,
       "macro avg": {
-        "precision": 0.8583545091967757,
-        "recall": 0.756069697807814,
-        "f1-score": 0.7928153717627402,
+        "precision": 0.8566258919469929,
+        "recall": 0.7524200627713176,
+        "f1-score": 0.7894685359147868,
         "support": 1488.0
       },
       "weighted avg": {
-        "precision": 0.8868878655471552,
-        "recall": 0.8924731182795699,
-        "f1-score": 0.8835889005668293,
+        "precision": 0.8853785088728858,
+        "recall": 0.8911290322580645,
+        "f1-score": 0.8818871689541302,
         "support": 1488.0
       }
     }
@@ -154,8 +154,8 @@
           176
         ],
         [
-          24,
-          1190
+          22,
+          1192
         ]
       ]
     },
@@ -166,12 +166,12 @@
       ],
       "matrix": [
         [
-          148,
-          126
+          147,
+          127
         ],
         [
-          34,
-          1180
+          35,
+          1179
         ]
       ]
     },
@@ -182,8 +182,8 @@
       ],
       "matrix": [
         [
-          148,
-          126
+          146,
+          128
         ],
         [
           34,

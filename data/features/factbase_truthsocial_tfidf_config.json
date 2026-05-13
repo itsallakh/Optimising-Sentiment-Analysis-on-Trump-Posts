@@ -1,5 +1,5 @@
 {
-  "input_file": "factbase_truthsocial_texts_clean.csv",
+  "input_file": "data/processed/factbase_truthsocial_texts_clean.csv",
   "text_column": "text_clean",
   "min_df": 2,
   "max_df": 0.98,

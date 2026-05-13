@@ -593,7 +593,6 @@ def evaluate_sklearn_logreg(
 ) -> tuple[dict, dict]:
     start = time.perf_counter()
     model = LogisticRegression(
-        penalty="l2",
         C=args.sklearn_c,
         solver="lbfgs",
         max_iter=2000,

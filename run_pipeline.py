@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -30,7 +31,9 @@ def parse_args() -> argparse.Namespace:
 
 def run_step(command: list[str]) -> None:
     print("\n$ " + " ".join(command), flush=True)
-    subprocess.run(command, cwd=ROOT, check=True)
+    env = os.environ.copy()
+    env.setdefault("MPLCONFIGDIR", str(ROOT / ".cache/matplotlib"))
+    subprocess.run(command, cwd=ROOT, check=True, env=env)
 
 
 def ensure_directories() -> None:
@@ -44,6 +47,7 @@ def ensure_directories() -> None:
         ROOT / "outputs/optimizers/tradeoff",
         ROOT / "outputs/optimizers/validation/figures",
         ROOT / "outputs/optimizers/analysis",
+        ROOT / ".cache/matplotlib",
     ]:
         path.mkdir(parents=True, exist_ok=True)
 

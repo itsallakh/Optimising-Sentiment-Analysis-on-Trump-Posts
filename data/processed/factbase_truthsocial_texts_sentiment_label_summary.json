@@ -1,6 +1,6 @@
 {
-  "input_file": "factbase_truthsocial_texts_nlp_ready.csv",
-  "output_file": "factbase_truthsocial_texts_sentiment_labeled.csv",
+  "input_file": "data/processed/factbase_truthsocial_texts_nlp_ready.csv",
+  "output_file": "data/processed/factbase_truthsocial_texts_sentiment_labeled.csv",
   "text_column": "text_clean",
   "row_count": 7437,
   "label_counts": {
