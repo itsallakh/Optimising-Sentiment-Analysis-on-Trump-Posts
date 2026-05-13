@@ -353,31 +353,35 @@ An animated loss visualization is also saved as `outputs/optimizers/analysis/opt
 
 ## Reproducibility Instructions
 
-The project is organized as a script-based pipeline. From the repository root, the main stages can be reproduced with:
+The project is organized so scraping is optional. The raw scraped CSV can be saved once and reused for preprocessing, labeling, training, and analysis.
+
+To run everything from the scraper:
 
 ```bash
-python prepare_tfidf_dataset.py
-python label_sentiment_dataset.py
-python train_sentiment_logreg.py
-python train_custom_optimizers.py
-python optimizer_tradeoff_experiments.py
-python analyze_optimizer_tradeoffs.py
+python run_pipeline.py --from-scrape
 ```
 
-The repository has been reorganized so saved datasets, models, and generated outputs live under `data/`, `models/`, and `outputs/`. The Python script contents were left unchanged; if rerunning from scratch, pass the corresponding command-line input and output paths shown below, or update the script defaults in a separate code-change step.
+To skip scraping and start from the already saved raw CSV at `data/raw/factbase_truthsocial_texts.csv`:
+
+```bash
+python run_pipeline.py --from-saved-data
+```
+
+The first command runs browser-based scraping, then moves the scraped CSV into `data/raw/` and runs the full modeling pipeline. The second command starts from the saved scrape and reruns only cleaning, preprocessing, sentiment labeling, model training, optimizer experiments, and analysis.
 
 Expected key outputs:
 
 | Command | Main outputs |
 | --- | --- |
-| `prepare_tfidf_dataset.py` | `data/processed/factbase_truthsocial_texts_nlp_ready.csv`, `data/features/factbase_truthsocial_texts_tfidf.npz`, `data/features/factbase_truthsocial_texts_tfidf_features.csv`, `models/factbase_truthsocial_tfidf_vectorizer.joblib`, `data/features/factbase_truthsocial_tfidf_config.json` |
+| `clean_factbase_dataset.py` | `data/processed/factbase_truthsocial_texts_clean.csv` |
+| `prepare_tfidf_dataset.py` | `data/processed/factbase_truthsocial_texts_nlp_ready.csv`, `data/features/factbase_truthsocial_texts_tfidf.npz`, `data/features/factbase_truthsocial_texts_tfidf_features.csv`, `data/features/factbase_truthsocial_tfidf_vectorizer.joblib`, `data/features/factbase_truthsocial_tfidf_config.json` |
 | `label_sentiment_dataset.py` | `data/processed/factbase_truthsocial_texts_sentiment_labeled.csv`, `data/processed/factbase_truthsocial_texts_sentiment_label_summary.json` |
 | `train_sentiment_logreg.py` | `models/sentiment_logreg_pipeline.joblib`, `outputs/classification/sentiment_logreg_report.json`, `outputs/classification/sentiment_logreg_test_predictions.csv` |
 | `train_custom_optimizers.py` | `outputs/optimizers/baseline/optimizer_results.csv`, `outputs/optimizers/baseline/optimizer_loss_history.csv`, `outputs/optimizers/baseline/optimizer_report.json`, `outputs/optimizers/baseline/optimizer_test_predictions.csv`, `outputs/optimizers/baseline/optimizer_loss_curves.png` |
 | `optimizer_tradeoff_experiments.py` | validation and final test artifacts in `outputs/optimizers/validation/`, plus `outputs/optimizers/validation/figures/seed_stability_boxplot.png` |
 | `analyze_optimizer_tradeoffs.py` | Summary CSV/Markdown files and figures in `outputs/optimizers/analysis/` |
 
-The scraping step is handled separately by `scrape_factbase.py` because it depends on browser automation and the current structure of the Factbase website. The saved data files allow the optimization experiments to be reproduced without scraping again.
+The scraping step is handled separately because it depends on browser automation and the current structure of the Factbase website. The saved data files allow the optimization experiments to be reproduced without scraping again.
 
 ## Limitations
 
@@ -394,7 +398,9 @@ The scraping step is handled separately by `scrape_factbase.py` because it depen
 ```text
 .
 |-- README.md
+|-- run_pipeline.py
 |-- scrape_factbase.py
+|-- clean_factbase_dataset.py
 |-- prepare_tfidf_dataset.py
 |-- label_sentiment_dataset.py
 |-- train_sentiment_logreg.py
@@ -414,9 +420,9 @@ The scraping step is handled separately by `scrape_factbase.py` because it depen
 |   `-- features/
 |       |-- factbase_truthsocial_texts_tfidf.npz
 |       |-- factbase_truthsocial_texts_tfidf_features.csv
+|       |-- factbase_truthsocial_tfidf_vectorizer.joblib
 |       `-- factbase_truthsocial_tfidf_config.json
 |-- models/
-|   |-- factbase_truthsocial_tfidf_vectorizer.joblib
 |   `-- sentiment_logreg_pipeline.joblib
 `-- outputs/
     |-- classification/

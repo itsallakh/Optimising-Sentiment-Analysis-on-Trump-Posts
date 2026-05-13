@@ -18,13 +18,13 @@ from matplotlib.animation import FuncAnimation, PillowWriter
 
 
 ROOT = Path(__file__).resolve().parent
-OUTPUT_DIR = ROOT / "optimizer_analysis_outputs"
+OUTPUT_DIR = ROOT / "outputs/optimizers/analysis"
 
 INPUT_FILES = {
-    "results": "optimizer_tradeoff_results.csv",
-    "loss_history": "optimizer_tradeoff_loss_history.csv",
-    "stability": "optimizer_stability_summary.csv",
-    "report": "optimizer_tradeoff_report.json",
+    "results": "outputs/optimizers/validation/validation_optimizer_results.csv",
+    "loss_history": "outputs/optimizers/validation/validation_optimizer_loss_history.csv",
+    "stability": "outputs/optimizers/validation/validation_optimizer_stability_summary.csv",
+    "report": "outputs/optimizers/validation/validation_optimizer_report.json",
 }
 
 
@@ -46,11 +46,11 @@ ALIASES = {
         "epoch_to_90pct",
     ],
     "runtime_seconds": ["runtime_seconds", "runtime", "seconds", "fit_time"],
-    "test_accuracy": ["test_accuracy", "accuracy"],
-    "test_macro_f1": ["test_macro_f1", "macro_f1"],
-    "test_weighted_f1": ["test_weighted_f1", "weighted_f1"],
-    "mean_macro_f1": ["mean_macro_f1", "macro_f1_mean"],
-    "std_macro_f1": ["std_macro_f1", "macro_f1_std"],
+    "test_accuracy": ["test_accuracy", "validation_accuracy", "accuracy"],
+    "test_macro_f1": ["test_macro_f1", "validation_macro_f1", "macro_f1"],
+    "test_weighted_f1": ["test_weighted_f1", "validation_weighted_f1", "weighted_f1"],
+    "mean_macro_f1": ["mean_macro_f1", "mean_validation_macro_f1", "macro_f1_mean"],
+    "std_macro_f1": ["std_macro_f1", "std_validation_macro_f1", "macro_f1_std"],
     "mean_runtime_seconds": ["mean_runtime_seconds", "runtime_seconds_mean"],
     "std_runtime_seconds": ["std_runtime_seconds", "runtime_seconds_std"],
     "mean_final_loss": ["mean_final_loss", "final_loss_mean"],

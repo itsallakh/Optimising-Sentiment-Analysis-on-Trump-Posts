@@ -1,6 +1,6 @@
 summary_item,scenario,optimizer,learning_rate,batch_size,l2,seed,macro_f1,runtime_seconds,loss_roughness,practical_score,basis
-best result by learning-rate scenario,learning_rate_sensitivity,Mini-batch GD,2.0,64.0,0.0001,42,0.8087339743589743,0.6165797999128699,0.0041141047548293,0.9269510244491594,highest practical score within scenario
-best result by mini-batch-size scenario,mini_batch_size,Mini-batch GD,1.0,16.0,0.0001,42,0.8182889598282157,2.153611399931833,0.0047505824461885,0.9159141055585478,highest practical score within scenario
-best result by L2-interaction scenario,l2_interaction,Mini-batch GD,1.0,64.0,1e-05,42,0.807815214628842,0.9294044999405742,0.0033595847310752,0.924696156363046,highest practical score within scenario
-best result by stability-across-seeds scenario,stability_across_seeds,SGD,0.05,,0.0001,,0.7940411872728179,12.284274780098349,,0.55,"mean macro F1, macro-F1 stability, and mean runtime across seeds"
-practical overall winner,learning_rate_sensitivity,Mini-batch GD,2.0,64.0,0.0001,42,0.8087339743589743,0.6165797999128699,0.0041141047548293,0.9269510244491594,best runtime/performance/smoothness tradeoff across all saved runs
+best result by learning-rate scenario,learning_rate_sensitivity,Mini-batch GD,2.0,64.0,0.0001,42,0.7557265897013011,0.7173552090025623,0.0040106552673925,0.8781766217730955,highest practical score within scenario
+best result by mini-batch-size scenario,mini_batch_size,Mini-batch GD,1.0,16.0,0.0001,42,0.7717714572165006,2.5658365830022376,0.004866489107999,0.8722595502460667,highest practical score within scenario
+best result by L2-interaction scenario,l2_interaction,Mini-batch GD,1.0,64.0,1e-05,42,0.7522885328325433,0.7200414999970235,0.0031285824866804,0.8768525103720222,highest practical score within scenario
+best result by stability-across-seeds scenario,stability_across_seeds,SGD,0.05,,0.0001,,0.7659312823889743,15.74704054199974,,0.55,"mean macro F1, macro-F1 stability, and mean runtime across seeds"
+practical overall winner,learning_rate_sensitivity,Mini-batch GD,2.0,64.0,0.0001,42,0.7557265897013011,0.7173552090025623,0.0040106552673925,0.8781766217730955,best runtime/performance/smoothness tradeoff across all saved runs
